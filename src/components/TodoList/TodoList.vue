@@ -41,7 +41,7 @@ const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADI
 
     <p>
       {{ todoStore.todoItemsCount }}
-      {{ todoStore.todoItemsCount === 1 ? "item" : "items" }}
+      {{ todoStore.todoItemsCount === 1 ? "Note" : "Notes" }}
     </p>
   </template>
 

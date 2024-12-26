@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { ToDoListItem } from "@/types/todolist-types";
 import Text from "../reusable/Text.vue";
-import { useTodoList } from "@/composables/useTodoList";
 import { computed } from "vue";
 
 

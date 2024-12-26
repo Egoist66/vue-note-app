@@ -24,7 +24,7 @@ const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADI
   </div>
 
   <template v-if="todoStore.todoItemsCount">
-    <ul class="list-group">
+    <ul class="list-group mb-5">
       <TodoListItem
         class="list-group-item"
         v-for="todoItem in todoStore.todoItems"
@@ -32,6 +32,10 @@ const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADI
         :todoItem="todoItem"
       />
     </ul>
+
+    <p>
+        {{ todoStore.todoItemsCount }} {{ todoStore.todoItemsCount === 1 ? "item" : "items" }}
+    </p>
   </template>
 </template>
 

@@ -8,5 +8,6 @@ export type ToDoListItem = {
     created_at: Date | number,
     completed: boolean
     editing: boolean
+    deleting: boolean
 }
 

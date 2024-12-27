@@ -5,7 +5,15 @@ import TodoListItem from "../TodoListItem/TodoListItem.vue";
 import { computed } from "vue";
 import Text from "../reusable/Text.vue";
 
-const { inputValue, createTodoItem, completeTodoItem, editTodoItem, deleteTodoItem, todoStore, statuses } = useTodoList();
+const {
+  inputValue,
+  createTodoItem,
+  completeTodoItem,
+  editTodoItem,
+  deleteTodoItem,
+  todoStore,
+  statuses,
+} = useTodoList();
 const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADING);
 </script>
 
@@ -20,13 +28,19 @@ const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADI
       aria-label="Enter some text"
       aria-describedby="basic-addon2"
     />
-    <button
-      :disabled="isLoading || !inputValue"
-      @click="createTodoItem"
-      class="btn btn-outline-primary"
-    >
-      {{ isLoading ? "Adding..." : "Add note" }}
-    </button>
+    <div class="input-group-append">
+      <button
+        :disabled="isLoading || !inputValue"
+        @click="createTodoItem"
+        class="btn btn-outline-primary"
+      >
+        {{ isLoading ? "Adding..." : "Add note" }}
+      </button>
+
+      <button @click="todoStore.todoItems = []" class="btn btn-outline-danger">
+        Clear all
+      </button>
+    </div>
   </div>
 
   <template v-if="todoStore.todoItemsCount">
@@ -53,9 +67,8 @@ const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADI
 </template>
 
 <style scoped>
-
 input {
-  width: 78% !important;
+  width: 84% !important;
 }
 .input-controls {
   display: flex;
@@ -65,7 +78,10 @@ input {
   align-items: center;
 }
 
-button {
-  width: 20%;
+.input-group-append {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 </style>

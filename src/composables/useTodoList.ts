@@ -10,7 +10,6 @@ export const useTodoList = () => {
   const {
     statuses,
     setLoading,
-    setDeleting,
     setSuccess,
     setError,
     resetStatuses,
@@ -47,7 +46,6 @@ export const useTodoList = () => {
     try {
 
       await todoStore.removeTodoItems(id);
-      setSuccess();
     } catch (e) {
       console.log(e);
       setError(e);
@@ -58,5 +56,22 @@ export const useTodoList = () => {
     }
   };
 
-  return { inputValue, createTodoItem, deleteTodoItem, todoStore, statuses };
+
+  const editTodoItem = async (id: ToDoListItem["id"], newText: ToDoListItem["text"]) => {
+    if(!newText) {
+      alert('Empty values are not allowed!')
+      return
+    }
+    try {
+      await todoStore.updateTodoItem(id, newText);
+    } catch (e) {
+      console.log(e);
+      setError(e);
+    } finally {
+      await delay(500);
+      resetStatuses();
+    }
+  };
+
+  return { inputValue, createTodoItem, editTodoItem, deleteTodoItem, todoStore, statuses };
 };

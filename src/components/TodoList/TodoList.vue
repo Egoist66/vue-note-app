@@ -4,12 +4,12 @@ import { TodoListCreateStatuses } from "@/types/todolist-statuses";
 import TodoListItem from "../TodoListItem/TodoListItem.vue";
 import { computed } from "vue";
 
-const { inputValue, createTodoItem, deleteTodoItem, todoStore, statuses } = useTodoList();
+const { inputValue, createTodoItem, editTodoItem, deleteTodoItem, todoStore, statuses } = useTodoList();
 const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADING);
 </script>
 
 <template>
-  <div class="input-controls rounded mb-3">
+  <div class="input-controls rounded mb-5">
     <input
       v-model.trim="inputValue"
       @keydown.enter="createTodoItem"
@@ -32,6 +32,7 @@ const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADI
     <TransitionGroup tag="ul" class="list-group mb-5" name="list">
       <TodoListItem
         @delete="deleteTodoItem(todoItem.id)"
+        @edit="editTodoItem"
         class="list-group-item"
         v-for="todoItem in todoStore.todoItems"
         :key="todoItem.id"

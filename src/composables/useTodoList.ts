@@ -73,5 +73,16 @@ export const useTodoList = () => {
     }
   };
 
-  return { inputValue, createTodoItem, editTodoItem, deleteTodoItem, todoStore, statuses };
+  const completeTodoItem =  (id: ToDoListItem["id"]) => {
+    try {
+      todoStore.toggleCompleItem(id);
+    } catch (e) {
+      console.log(e);
+      setError(e);
+    } finally {
+      resetStatuses();
+    }
+  };
+
+  return { inputValue, createTodoItem, completeTodoItem,editTodoItem, deleteTodoItem, todoStore, statuses };
 };

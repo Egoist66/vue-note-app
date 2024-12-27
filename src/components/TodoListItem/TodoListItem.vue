@@ -3,55 +3,51 @@ import type { ToDoListItem } from "@/types/todolist-types";
 import Text from "../reusable/Text.vue";
 import { useTodoListItem } from "@/composables/useTodoListItem";
 import { computed } from "vue";
+import TodoListItemControls from "./TodoListItemControls.vue";
 
 const props = defineProps<{
   todoItem: ToDoListItem;
 }>();
 
+
 defineEmits<{
   (e: "delete", id: ToDoListItem["id"]): void;
   (e: "edit", id: ToDoListItem["id"], text: ToDoListItem["text"]): void;
+  (e: "toggleComplete", id: ToDoListItem["id"]): void;
 }>();
 
+
 const isDeleting = computed<boolean>(() => props.todoItem.deleting);
-const { todoItemText, isReadMode, toggleEditMode} = useTodoListItem(
-  props.todoItem
-);
+const { todoItemText, isReadMode, toggleEditMode } = useTodoListItem(props.todoItem);
 </script>
 
 <template>
   <slot v-if="$slots['todo-item']" name="todo-item" :todoItem="todoItem" />
-
 
   <li class="list-group-item shadow-sm" v-else>
     <textarea
       :title="isReadMode ? 'Click to edit' : ''"
       :disabled="isReadMode"
       :readonly="isReadMode"
+      :class="{ 'resize-none': isReadMode, 'completed': todoItem.completed }"
       class="form-control w-50"
-      @blur="$emit('edit', todoItem.id, todoItemText), isReadMode = true"
+      @blur="$emit('edit', todoItem.id, todoItemText), (isReadMode = true)"
       v-model="todoItemText"
     ></textarea>
 
-    <div class="list-subgroup-item">
-      <button class="btn btn-primary" @click="toggleEditMode">
-        {{ isReadMode ? "Edit" : "Exit" }}
-      </button>
-      <button
-        :disabled="isDeleting"
-        class="btn btn-danger"
-        @click="$emit('delete', todoItem.id)"
-      >
-        {{ isDeleting ? "Deleting..." : "Delete" }}
-      </button>
-      <Text class="text-muted item-date" tag="span" v-if="todoItem.created_at">
-        {{ new Date(todoItem.created_at).toLocaleString() }}
-      </Text>
-    </div>
+    <TodoListItemControls
+     :toggleComplete="() => $emit('toggleComplete', todoItem.id)"
+     :deleteItem="() => $emit('delete', todoItem.id)" 
+     :isDeleting="isDeleting"
+     :isReadMode="isReadMode"
+     :toggleEditMode="toggleEditMode"
+     :todoItem="todoItem"
+    />
   </li>
 </template>
 
 <style scoped>
+
 .item-date {
   font-size: 12px;
   word-break: break-all;
@@ -63,6 +59,9 @@ const { todoItemText, isReadMode, toggleEditMode} = useTodoListItem(
   align-items: center;
 }
 
+.resize-none {
+  resize: none;
+}
 @media (max-width: 768px) {
   .list-group-item {
     align-items: baseline;
@@ -75,8 +74,15 @@ const { todoItemText, isReadMode, toggleEditMode} = useTodoListItem(
   align-items: center;
 }
 
+.completed {
+  text-decoration: line-through;
+  filter: opacity(0.5);
+  transition: all 0.3s ease-in-out;
+}
+
 textarea {
   cursor: text;
+  transition: all 0.3s ease-in-out;
 }
 textarea:disabled {
   background-color: #efeeee;

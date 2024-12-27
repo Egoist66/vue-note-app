@@ -38,5 +38,9 @@ export const useTodoListStore = defineStore('todolist-store', () => {
 
   }
 
-  return { todoItems, todoItemsCount, addTodoItems, removeTodoItems, updateTodoItem }
+  const toggleCompleItem = (id: ToDoListItem['id']) => {
+    todoItems.value = todoItems.value.map(item => item.id === id ? { ...item, completed: !item.completed } : item)
+  }
+
+  return { todoItems, todoItemsCount, addTodoItems, toggleCompleItem, removeTodoItems, updateTodoItem }
 })

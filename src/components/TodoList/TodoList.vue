@@ -4,7 +4,7 @@ import { TodoListCreateStatuses } from "@/types/todolist-statuses";
 import TodoListItem from "../TodoListItem/TodoListItem.vue";
 import { computed } from "vue";
 
-const { inputValue, createTodoItem, editTodoItem, deleteTodoItem, todoStore, statuses } = useTodoList();
+const { inputValue, createTodoItem, completeTodoItem, editTodoItem, deleteTodoItem, todoStore, statuses } = useTodoList();
 const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADING);
 </script>
 
@@ -31,7 +31,8 @@ const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADI
   <template v-if="todoStore.todoItemsCount">
     <TransitionGroup tag="ul" class="list-group mb-5" name="list">
       <TodoListItem
-        @delete="deleteTodoItem(todoItem.id)"
+        @toggle-complete="completeTodoItem"
+        @delete="deleteTodoItem"
         @edit="editTodoItem"
         class="list-group-item"
         v-for="todoItem in todoStore.todoItems"

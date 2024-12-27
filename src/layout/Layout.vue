@@ -4,7 +4,7 @@
 </script>
 
 <template>
-    <main class="main">
+    <main v-once class="main">
 
         <div class="container">
             

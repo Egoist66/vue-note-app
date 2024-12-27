@@ -53,9 +53,14 @@ const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADI
 </template>
 
 <style scoped>
+
+input {
+  width: 78% !important;
+}
 .input-controls {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
 }

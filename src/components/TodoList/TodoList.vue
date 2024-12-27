@@ -3,6 +3,7 @@ import { useTodoList } from "@/composables/useTodoList";
 import { TodoListCreateStatuses } from "@/types/todolist-statuses";
 import TodoListItem from "../TodoListItem/TodoListItem.vue";
 import { computed } from "vue";
+import Text from "../reusable/Text.vue";
 
 const { inputValue, createTodoItem, completeTodoItem, editTodoItem, deleteTodoItem, todoStore, statuses } = useTodoList();
 const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADING);
@@ -41,10 +42,11 @@ const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADI
       />
     </TransitionGroup>
 
-    <p>
+    <Text tag="p">
       {{ todoStore.todoItemsCount }}
+      -
       {{ todoStore.todoItemsCount === 1 ? "Note" : "Notes" }}
-    </p>
+    </Text>
   </template>
 
   <p v-else>No items</p>

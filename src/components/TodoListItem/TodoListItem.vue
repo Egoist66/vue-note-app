@@ -77,12 +77,12 @@ const { todoItemText, isReadMode, toggleEditMode } = useTodoListItem(props.todoI
 .completed {
   text-decoration: line-through;
   filter: opacity(0.5);
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease;
 }
 
 textarea {
   cursor: text;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease;
 }
 textarea:disabled {
   background-color: #efeeee;

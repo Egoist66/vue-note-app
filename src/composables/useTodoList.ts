@@ -4,6 +4,8 @@ import { useStatuses } from "./service/useStatuses";
 import { delay } from "@/utils/delay";
 import type { ToDoListItem } from "@/types/todolist-types";
 import { useNotification } from "./service/useNotification";
+import Swal from "sweetalert2";
+
 
 export const useTodoList = () => {
   const inputValue = ref<string>("");
@@ -35,7 +37,17 @@ export const useTodoList = () => {
         editing: false,
       }, () => {
 
-        
+        Swal.fire({
+          icon: 'success',
+          title: `Note ${inputValue.value} added!`,
+          showConfirmButton: false,
+          timer: 3000,
+          position: 'top-end',
+          width: 400,
+          focusCancel: false,
+          showCloseButton: true,
+          timerProgressBar: true,
+        })
         notification.createNotification({
           title: `${inputValue.value} note added`,
           body: 'You can delete or edit it',
@@ -64,7 +76,27 @@ export const useTodoList = () => {
   const deleteTodoItem = async (id: ToDoListItem["id"]) => {
     try {
 
-      await todoStore.removeTodoItems(id);
+      await todoStore.removeTodoItems(id, () => {
+        notification.createNotification({
+          title: 'Note deleted!',
+          body: 'You can restore it',
+          requireInteraction: true
+        }, (notInstance) => {
+          console.log('inst:', notInstance)
+        })
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Note deleted!',
+          showConfirmButton: false,
+          timer: 3000,
+          position: 'top-end',
+          width: 400,
+          focusCancel: false,
+          showCloseButton: true,
+          timerProgressBar: true,
+        })
+      });
     } catch (e) {
       console.log(e);
       setError(e);

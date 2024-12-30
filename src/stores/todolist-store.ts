@@ -22,12 +22,14 @@ export const useTodoListStore = defineStore('todolist-store', () => {
     callback?.()
   }
 
-  const removeTodoItems = async (id: ToDoListItem['id']) => {
+  const removeTodoItems = async (id: ToDoListItem['id'], callback?: () => void) => {
     todoItems.value = todoItems.value.map((item) => item.id === id ? { ...item, deleting: true } : item)
 
     await delay(500)
 
     todoItems.value = todoItems.value.filter((item) => item.id !== id)
+
+    callback?.()
 
   }
 

@@ -16,8 +16,10 @@ export const useTodoListStore = defineStore('todolist-store', () => {
     set('todoItems', todoItems.value)
   })
 
-  const addTodoItems = (todoItem: ToDoListItem) => {
+  const addTodoItems = (todoItem: ToDoListItem, callback?: () => void) => {
     todoItems.value = [...todoItems.value, todoItem]
+
+    callback?.()
   }
 
   const removeTodoItems = async (id: ToDoListItem['id']) => {

@@ -33,17 +33,21 @@ export const useTodoList = () => {
         deleting: false,
         completed: false,
         editing: false,
+      }, () => {
+
+        
+        notification.createNotification({
+          title: `${inputValue.value} note added`,
+          body: 'You can delete or edit it',
+          requireInteraction: true
+        }, (notInstance) => {
+         
+          console.log('inst:', notInstance)
+        })
+
       });
 
-      notification.createNotification({
-        title: `${inputValue.value} note added`,
-        requireInteraction: true
-      }, (notInstance) => {
-        notInstance.onclick = () => {
-          notInstance.close()
-        }
-        console.log(notInstance)
-      })
+      
       inputValue.value = "";
       setSuccess();
 

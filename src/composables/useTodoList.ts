@@ -3,10 +3,14 @@ import { ref } from "vue";
 import { useStatuses } from "./service/useStatuses";
 import { delay } from "@/utils/delay";
 import type { ToDoListItem } from "@/types/todolist-types";
+import { useNotification } from "./service/useNotification";
 
 export const useTodoList = () => {
   const inputValue = ref<string>("");
   const todoStore = useTodoListStore();
+
+
+  const notification = useNotification()
   const {
     statuses,
     setLoading,
@@ -31,8 +35,19 @@ export const useTodoList = () => {
         editing: false,
       });
 
+      notification.createNotification({
+        title: `${inputValue.value} note added`,
+        requireInteraction: true
+      }, (notInstance) => {
+        notInstance.onclick = () => {
+          notInstance.close()
+        }
+        console.log(notInstance)
+      })
       inputValue.value = "";
       setSuccess();
+
+     
     } catch (e) {
       console.log(e);
       setError(e);

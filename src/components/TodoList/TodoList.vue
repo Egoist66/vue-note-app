@@ -2,8 +2,10 @@
 import { useTodoList } from "@/composables/useTodoList";
 import { TodoListCreateStatuses } from "@/types/todolist-statuses";
 import TodoListItem from "../TodoListItem/TodoListItem.vue";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import Text from "../reusable/Text.vue";
+import Modal from "../reusable/Modal.vue";
+import { useBackup } from "@/composables/service/useBackup";
 
 const {
   inputValue,
@@ -14,7 +16,17 @@ const {
   todoStore,
   statuses,
 } = useTodoList();
+
+const {backup, uploadBackup, rawFileBackUp} = useBackup()
+
 const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADING);
+const isModalShown = ref<boolean>(false)
+
+const toggleModal = () => {
+  isModalShown.value = !isModalShown.value
+}
+
+
 </script>
 
 <template>
@@ -41,7 +53,27 @@ const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADI
       <button @click="todoStore.todoItems = []" class="btn btn-outline-danger">
         Clear all
       </button>
+
+      <button @click="toggleModal" class="btn btn-outline-success">Backup notes</button>
     </div>
+
+    <Teleport to="body">
+     <Transition mode="out-in" name="fade">
+
+        <Modal @close="toggleModal" background-color="#212529b0" :show="isModalShown" title="Backup settings">
+          <div class="backup-controls">
+            <button @click="backup" class="btn btn-dark mb-3">Backup now</button>
+            <div class="upload-controls">
+              <button @click="uploadBackup" class="btn btn-dark">Upload</button>
+              <input @change="uploadBackup" ref="inputRef" hidden class="form-control" accept="application/json" type="file">
+    
+              {{ rawFileBackUp?.name }}
+            </div>
+          </div>
+    
+        </Modal>
+     </Transition>
+    </Teleport>
   </div>
 
   <template v-if="todoStore.todoItemsCount">
@@ -67,7 +99,7 @@ const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADI
   <p v-else>No items</p>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 input {
   width: 84% !important;
 }
@@ -85,4 +117,18 @@ input {
   flex-wrap: wrap;
   align-items: center;
 }
+
+.backup-controls {
+  display: flex;
+  gap: 10px;
+
+  & button {
+    width: 100%;
+  }
+
+  & .upload-controls {
+    width: 100%;
+  }
+}
+
 </style>

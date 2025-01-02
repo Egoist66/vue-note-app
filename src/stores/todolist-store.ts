@@ -6,15 +6,12 @@ import { useLS } from '@/composables/service/useLS'
 
 export const useTodoListStore = defineStore('todolist-store', () => {
 
-  const {set, getSync} = useLS()
+  const {getSync} = useLS()
  
   const todoItems = ref<ToDoListApp['todolistitems']>(getSync<ToDoListApp['todolistitems']>('todoItems') ?? [])
   const todoItemsCount = computed(() => todoItems.value.length)
   
 
-  watch(todoItems, () => {
-    set('todoItems', todoItems.value)
-  })
 
   const addTodoItems = (todoItem: ToDoListItem, callback?: () => void) => {
     todoItems.value = [...todoItems.value, todoItem]

@@ -17,21 +17,18 @@ const {
   statuses,
 } = useTodoList();
 
-const {backup, uploadBackup, rawFileBackUp} = useBackup()
+const { backup, uploadBackup, rawFileBackUp } = useBackup();
 
 const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADING);
-const isModalShown = ref<boolean>(false)
+const isModalShown = ref<boolean>(false);
 
 const toggleModal = () => {
-  isModalShown.value = !isModalShown.value
-}
-
-
+  isModalShown.value = !isModalShown.value;
+};
 </script>
 
 <template>
   <div class="input-controls rounded mb-5">
-
     <input
       v-model.trim="inputValue"
       @keydown.enter="createTodoItem"
@@ -58,21 +55,29 @@ const toggleModal = () => {
     </div>
 
     <Teleport to="body">
-     <Transition mode="out-in" name="fade">
+      <Modal
+        @close="toggleModal"
+        background-color="#212529b0"
+        :show="isModalShown"
+        title="Backup settings"
+      >
+        <div class="backup-controls">
+          <button @click="backup" class="btn btn-dark mb-3">Backup now</button>
+          <div class="upload-controls">
+            <button @click="uploadBackup" class="btn btn-dark">Upload</button>
+            <input
+              @change="uploadBackup"
+              ref="inputRef"
+              hidden
+              class="form-control"
+              accept="application/json"
+              type="file"
+            />
 
-        <Modal @close="toggleModal" background-color="#212529b0" :show="isModalShown" title="Backup settings">
-          <div class="backup-controls">
-            <button @click="backup" class="btn btn-dark mb-3">Backup now</button>
-            <div class="upload-controls">
-              <button @click="uploadBackup" class="btn btn-dark">Upload</button>
-              <input @change="uploadBackup" ref="inputRef" hidden class="form-control" accept="application/json" type="file">
-    
-              {{ rawFileBackUp?.name }}
-            </div>
+            {{ rawFileBackUp?.name }}
           </div>
-    
-        </Modal>
-     </Transition>
+        </div>
+      </Modal>
     </Teleport>
   </div>
 
@@ -130,5 +135,4 @@ input {
     width: 100%;
   }
 }
-
 </style>

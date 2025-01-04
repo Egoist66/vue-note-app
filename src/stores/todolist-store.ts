@@ -37,6 +37,7 @@ export const useTodoListStore = defineStore('todolist-store', () => {
   }
 
   const updateTodoItem = async (id: ToDoListItem['id'], newText: ToDoListItem['text']) => {
+    console.log('Update');
     todoItems.value = todoItems.value.map((item) => item.id === id ? { ...item, text: newText, editing: true } : item)
 
 

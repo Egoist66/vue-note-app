@@ -18,7 +18,7 @@ const {
   statuses,
 } = useTodoList();
 
-const { backup, uploadBackup, rawFileBackUp } = useBackup();
+const { backup, uploadBackup, restoreData, rawFileBackUp } = useBackup();
 
 const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADING);
 const isModalShown = ref<boolean>(false);
@@ -57,7 +57,7 @@ const toggleModal = () => {
         }}
       </button>
 
-      <button :disabled="todoStore.todoItemsCount <= 0" @click="toggleModal" class="btn btn-outline-success">Backup notes</button>
+      <button  @click="toggleModal" class="btn btn-outline-success">Backup notes</button>
     </div>
 
     <Teleport to="body">
@@ -65,12 +65,18 @@ const toggleModal = () => {
         @close="toggleModal"
         background-color="#212529b0"
         :show="isModalShown"
-        title="Backup settings"
+        :title="rawFileBackUp?.name ?? 'Backup settings'"
       >
         <div class="backup-controls">
-          <button @click="backup" class="btn btn-dark mb-3">Backup now</button>
+          <button :disabled="!todoStore.todoItemsCount" @click="backup" class="btn btn-outline-dark mb-3">Backup now</button>
           <div class="upload-controls">
-            <button @click="uploadBackup" class="btn btn-dark">Upload</button>
+            <button @click="uploadBackup" class="btn btn-outline-dark mb-3">
+              Upload
+            </button>
+
+            <button :disabled="!rawFileBackUp" @click="restoreData"  class="btn btn-outline-dark">
+              Save
+            </button>
             <input
               @change="uploadBackup"
               ref="inputRef"
@@ -80,7 +86,6 @@ const toggleModal = () => {
               type="file"
             />
 
-            {{ rawFileBackUp?.name }}
           </div>
         </div>
       </Modal>
@@ -131,7 +136,7 @@ input {
 
 .backup-controls {
   display: flex;
-  gap: 10px;
+  flex-wrap: wrap;
 
   & button {
     width: 100%;
@@ -139,6 +144,7 @@ input {
 
   & .upload-controls {
     width: 100%;
+    
   }
 }
 </style>

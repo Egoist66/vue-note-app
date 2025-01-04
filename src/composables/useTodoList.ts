@@ -125,7 +125,7 @@ export const useTodoList = () => {
   };
 
 
-  const editTodoItem = async (id: ToDoListItem["id"], newText: ToDoListItem["text"]) => {
+  const editTodoItem = async (id: ToDoListItem["id"], newText: ToDoListItem["text"], todoItem: ToDoListItem) => {
     if(newText.length <= 0) {
       setError('Please enter text')
       Swal.fire({
@@ -138,6 +138,10 @@ export const useTodoList = () => {
         width: 320,
         timerProgressBar: true,
       })
+      return
+    }
+
+    if(newText === todoItem.text) {
       return
     }
     try {

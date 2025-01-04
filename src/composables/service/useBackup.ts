@@ -1,5 +1,6 @@
 import { useTodoListStore } from "@/stores/todolist-store"
 import type { ToDoListItem } from "@/types/todolist-types"
+import { delay } from "@/utils/delay"
 import { storeToRefs } from "pinia"
 import { ref, useTemplateRef } from "vue"
 
@@ -15,8 +16,8 @@ import { ref, useTemplateRef } from "vue"
 export const useBackup = () => {
     const {todoItems} = storeToRefs(useTodoListStore())
     const inputRef = useTemplateRef<HTMLInputElement>("inputRef")
-    const fileBackup = ref<ToDoListItem[]>([])
-    const rawFileBackUp = ref<File>()
+    const fileBackup = ref<ToDoListItem[] | null>([])
+    const rawFileBackUp = ref<File | null>()
 
 
 
@@ -43,6 +44,24 @@ export const useBackup = () => {
             
     }
 
+    const restoreData = () => {
+        if(rawFileBackUp.value){
+            const reader = new FileReader()
+            reader.readAsText(rawFileBackUp.value)
+
+            reader.onload = async () => {
+                const data = JSON.parse(reader.result as string) as ToDoListItem[]
+                fileBackup.value = data
+                todoItems.value = data
+
+                await delay(500)
+                fileBackup.value = null
+                rawFileBackUp.value = null
+
+            }
+        }
+    }
+
     const uploadBackup = () => {
         if(inputRef.value){
             inputRef.value.click()
@@ -64,6 +83,7 @@ export const useBackup = () => {
         inputRef,
         rawFileBackUp,
         uploadBackup,
+        restoreData,
         triggerUploadChange
     }
 }

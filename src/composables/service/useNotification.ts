@@ -9,10 +9,10 @@ interface NotificationFnProps {
 }
 
 export const useNotification = () => {
-  const permission = ref<NotificationPermission>(Notification.permission);
-
+  const permission = ref<NotificationPermission>(Notification ? Notification.permission : 'default');
+  const $Notification = window.Notification ?? null;
   const requestNotificationPermission = async () => {
-    permission.value = await Notification.requestPermission();
+    permission.value = await $Notification?.requestPermission();
     return permission.value
   };
 
@@ -22,7 +22,7 @@ export const useNotification = () => {
     const permissionVal = await requestNotificationPermission();
 
     if (permissionVal === 'granted') {
-      const notInstance = new Notification(title, { body, icon, tag, requireInteraction });
+      const notInstance = new $Notification(title, { body, icon, tag, requireInteraction });
       callback && callback(notInstance);
       return notInstance;
     } else {

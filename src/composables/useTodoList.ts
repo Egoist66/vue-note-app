@@ -18,6 +18,7 @@ export const useTodoList = () => {
     statuses,
     setLoading,
     setSuccess,
+    setDeleting,
     setError,
     resetStatuses,
   } = useStatuses();
@@ -40,13 +41,12 @@ export const useTodoList = () => {
 
         Swal.fire({
           icon: 'success',
-          title: `Note ${inputValue.value} added!`,
+          title: `Note added!`,
           showConfirmButton: false,
-          timer: 3000,
+          timer: 1000,
           position: 'top-end',
-          width: 400,
-          focusCancel: false,
-          showCloseButton: true,
+          width: 300,
+          toast: true,
           timerProgressBar: true,
         })
         notification.createNotification({
@@ -74,6 +74,22 @@ export const useTodoList = () => {
     }
   };
 
+  const clearAllTodoItems = async () => {
+    try {
+      setDeleting();
+      await todoStore.clearTodos();
+      setSuccess()
+    } 
+    catch (e) {
+      console.log(e);
+      setError(e);
+    } 
+    finally {
+      await delay(500);
+      resetStatuses();
+    }
+  };
+
   const deleteTodoItem = async (id: ToDoListItem["id"]) => {
     try {
 
@@ -87,13 +103,13 @@ export const useTodoList = () => {
         })
 
         Swal.fire({
-          icon: 'success',
+          icon: 'warning',
           title: 'Note deleted!',
           showConfirmButton: false,
-          timer: 3000,
+          timer: 1000,
           position: 'top-end',
-          width: 400,
-          focusCancel: false,
+          width: 300,
+          toast: true,
           showCloseButton: true,
           timerProgressBar: true,
         })
@@ -110,8 +126,18 @@ export const useTodoList = () => {
 
 
   const editTodoItem = async (id: ToDoListItem["id"], newText: ToDoListItem["text"]) => {
-    if(!newText) {
-      alert('Empty values are not allowed!')
+    if(newText.length <= 0) {
+      setError('Please enter text')
+      Swal.fire({
+        icon: 'error',
+        title: 'Empty values are not allowed!',
+        showConfirmButton: false,
+        toast: true,
+        timer: 1000,
+        position: 'top-end',
+        width: 320,
+        timerProgressBar: true,
+      })
       return
     }
     try {
@@ -136,5 +162,5 @@ export const useTodoList = () => {
     }
   };
 
-  return { inputValue, createTodoItem, completeTodoItem,editTodoItem, deleteTodoItem, todoStore, statuses };
+  return { inputValue, clearAllTodoItems, createTodoItem, completeTodoItem,editTodoItem, deleteTodoItem, todoStore, statuses };
 };

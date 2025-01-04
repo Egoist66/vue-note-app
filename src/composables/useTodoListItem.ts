@@ -1,5 +1,6 @@
 import type { ToDoListItem } from "@/types/todolist-types";
-import {ref, toRef} from "vue";
+import { delay } from "@/utils/delay";
+import {ref, toRef, watch} from "vue";
 
 
 /**
@@ -16,6 +17,14 @@ export const useTodoListItem = (todoItem: ToDoListItem) => {
   const toggleEditMode = () => isReadMode.value = !isReadMode.value
   const turnEditModeOff = () => isReadMode.value = false
 
+
+  watch(todoItemText, async () => {
+    if(todoItemText.value.length <= 0){
+      await delay(1500)
+
+      todoItemText.value = todoItem.text
+    }
+  })
 
   return {
     todoItemText,

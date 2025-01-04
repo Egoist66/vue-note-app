@@ -12,6 +12,7 @@ const {
   createTodoItem,
   completeTodoItem,
   editTodoItem,
+  clearAllTodoItems,
   deleteTodoItem,
   todoStore,
   statuses,
@@ -21,6 +22,9 @@ const { backup, uploadBackup, rawFileBackUp } = useBackup();
 
 const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADING);
 const isModalShown = ref<boolean>(false);
+
+
+
 
 const toggleModal = () => {
   isModalShown.value = !isModalShown.value;
@@ -47,11 +51,13 @@ const toggleModal = () => {
         {{ isLoading ? "Adding..." : "Add note" }}
       </button>
 
-      <button @click="todoStore.todoItems = []" class="btn btn-outline-danger">
-        Clear all
+      <button :disabled="statuses === TodoListCreateStatuses.DELETING || todoStore.todoItemsCount <= 0" @click="clearAllTodoItems" class="btn btn-outline-danger">
+        {{
+          statuses === TodoListCreateStatuses.DELETING ? "Clearing..." : "Clear all notes"
+        }}
       </button>
 
-      <button @click="toggleModal" class="btn btn-outline-success">Backup notes</button>
+      <button :disabled="todoStore.todoItemsCount <= 0" @click="toggleModal" class="btn btn-outline-success">Backup notes</button>
     </div>
 
     <Teleport to="body">

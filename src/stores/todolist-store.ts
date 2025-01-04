@@ -12,6 +12,12 @@ export const useTodoListStore = defineStore('todolist-store', () => {
   const todoItemsCount = computed(() => todoItems.value.length)
   
 
+  const loadTodosItems = async () => {
+    console.log('====================================');
+    console.log('Load todos items');
+    console.log('====================================');
+    todoItems.value =  getSync<ToDoListApp['todolistitems']>('todoItems') ?? []
+  }
 
   const addTodoItems = (todoItem: ToDoListItem, callback?: () => void) => {
     todoItems.value = [...todoItems.value, todoItem]
@@ -33,9 +39,11 @@ export const useTodoListStore = defineStore('todolist-store', () => {
   const updateTodoItem = async (id: ToDoListItem['id'], newText: ToDoListItem['text']) => {
     todoItems.value = todoItems.value.map((item) => item.id === id ? { ...item, text: newText, editing: true } : item)
 
-    await delay(500)
 
+    await delay(1000)
     todoItems.value = todoItems.value.map((item) => item.id === id ? { ...item, editing: false } : item)
+
+
 
   }
 
@@ -43,5 +51,11 @@ export const useTodoListStore = defineStore('todolist-store', () => {
     todoItems.value = todoItems.value.map(item => item.id === id ? { ...item, completed: !item.completed } : item)
   }
 
-  return { todoItems, todoItemsCount, addTodoItems, toggleCompleItem, removeTodoItems, updateTodoItem }
+  const clearTodos = async () => {
+    await delay(500)
+
+    todoItems.value = []
+  }
+
+  return { todoItems, loadTodosItems, todoItemsCount, clearTodos, addTodoItems, toggleCompleItem, removeTodoItems, updateTodoItem }
 })

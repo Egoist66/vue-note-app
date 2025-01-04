@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { ToDoListItem } from "@/types/todolist-types";
 import Text from "../reusable/Text.vue";
+import { computed } from "vue";
 
-defineProps<{
+const props = defineProps<{
   todoItem: ToDoListItem;
   isDeleting: boolean;
   isReadMode: boolean;
@@ -10,6 +11,9 @@ defineProps<{
   toggleEditMode: () => void;
   toggleComplete: () => void
 }>();
+
+
+const editiButtonStatus = computed(() => props.isReadMode ? "Edit" : "Exit");
 </script>
 
 <template>
@@ -24,8 +28,10 @@ defineProps<{
     </button>
 
     <button class="btn btn-primary" @click="toggleEditMode">
-      {{ isReadMode ? "Edit" : "Exit" }}
+      {{ todoItem.editing ? 'Editing...' : editiButtonStatus }}
     </button>
+
+    
     <button
       :disabled="isDeleting"
       class="btn btn-danger"

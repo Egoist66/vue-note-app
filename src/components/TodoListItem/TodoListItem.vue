@@ -8,45 +8,47 @@ const props = defineProps<{
   todoItem: ToDoListItem;
 }>();
 
-
 defineEmits<{
   (e: "delete", id: ToDoListItem["id"]): void;
-  (e: "edit", id: ToDoListItem["id"], text: ToDoListItem["text"]): void;
+  (e: "edit", id: ToDoListItem["id"], text: ToDoListItem["text"], todoItem: ToDoListItem): void;
   (e: "toggleComplete", id: ToDoListItem["id"]): void;
 }>();
 
-
 const isDeleting = computed<boolean>(() => props.todoItem.deleting);
 const { todoItemText, isReadMode, toggleEditMode } = useTodoListItem(props.todoItem);
+
+
+
 </script>
 
 <template>
   <slot v-if="$slots['todo-item']" name="todo-item" :todoItem="todoItem" />
 
+   
   <li class="list-group-item shadow-sm" v-else>
     <textarea
-      :title="isReadMode ? 'Click to edit' : ''"
-      :disabled="isReadMode"
+      @dblclick="toggleEditMode"
+      :title="isReadMode ? ' Double click to edit' : ''"
       :readonly="isReadMode"
-      :class="{ 'resize-none': isReadMode, 'completed': todoItem.completed }"
+      :style="{ filter: todoItem.editing ? 'blur(1px)' : '' }"
+      :class="{ 'resize-none': isReadMode, completed: todoItem.completed }"
       class="form-control w-50"
-      @blur="$emit('edit', todoItem.id, todoItemText), (isReadMode = true)"
+      @blur="$emit('edit', todoItem.id, todoItemText, todoItem), (isReadMode = true)"
       v-model="todoItemText"
     ></textarea>
 
     <TodoListItemControls
-     :toggleComplete="() => $emit('toggleComplete', todoItem.id)"
-     :deleteItem="() => $emit('delete', todoItem.id)" 
-     :isDeleting="isDeleting"
-     :isReadMode="isReadMode"
-     :toggleEditMode="toggleEditMode"
-     :todoItem="todoItem"
+      :toggleComplete="() => $emit('toggleComplete', todoItem.id)"
+      :deleteItem="() => $emit('delete', todoItem.id)"
+      :isDeleting="isDeleting"
+      :isReadMode="isReadMode"
+      :toggleEditMode="toggleEditMode"
+      :todoItem="todoItem"
     />
   </li>
 </template>
 
 <style scoped>
-
 .item-date {
   font-size: 12px;
   word-break: break-all;
@@ -60,6 +62,8 @@ const { todoItemText, isReadMode, toggleEditMode } = useTodoListItem(props.todoI
 
 .resize-none {
   resize: none;
+  outline: none !important;
+  box-shadow: none !important;
 }
 @media (max-width: 768px) {
   .list-group-item {

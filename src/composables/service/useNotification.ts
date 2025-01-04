@@ -9,7 +9,7 @@ interface NotificationFnProps {
 }
 
 export const useNotification = () => {
-  const permission = ref<NotificationPermission>(Notification ? Notification.permission : 'default');
+  const permission = ref<NotificationPermission>(window.Notification ? window.Notification.permission : 'default');
   const $Notification = window.Notification ?? null;
   const requestNotificationPermission = async () => {
     permission.value = await $Notification?.requestPermission();

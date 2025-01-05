@@ -3,5 +3,6 @@ export enum TodoListCreateStatuses {
     LOADING = 'loading',
     SUCCESS = 'success',
     DELETING = 'deleting',
-    ERROR = 'error'
+    ERROR = 'error',
+    RESTORING = 'restoring'
 }

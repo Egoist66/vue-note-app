@@ -19,7 +19,7 @@ const {
   statuses,
 } = useTodoList();
 
-const { backup, uploadBackup, triggerUploadChange, restoreData, rawFileBackUp } = useBackup();
+const { backup, statuses: backupStatuses, uploadBackup, triggerUploadChange, restoreData, rawFileBackUp } = useBackup();
 
 const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADING);
 const isModalShown = ref<boolean>(false);
@@ -77,7 +77,7 @@ const toggleModal = () => {
             @click="backup"
             class="btn btn-primary mb-3"
           >
-            Backup now
+            {{ backupStatuses === TodoListCreateStatuses.LOADING ? "Backing up..." : "Backup notes" }}
           </button>
           <div class="upload-controls">
             <button @click="uploadBackup" class="btn btn-outline-primary mb-3">
@@ -89,7 +89,7 @@ const toggleModal = () => {
               @click="restoreData"
               class="btn btn-outline-primary mb-3"
             >
-              Save
+              {{ backupStatuses === TodoListCreateStatuses.RESTORING ? "Restoring..." : "Restore" }}
             </button>
             <input
               @change="() => triggerUploadChange($refs?.inputRef?.files![0])"

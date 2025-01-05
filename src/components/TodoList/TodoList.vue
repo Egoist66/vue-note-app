@@ -6,6 +6,7 @@ import { computed, ref } from "vue";
 import Text from "../reusable/Text.vue";
 import Modal from "../reusable/Modal.vue";
 import { useBackup } from "@/composables/service/useBackup";
+import Badge from "../reusable/Badge.vue";
 
 const {
   inputValue,
@@ -66,7 +67,7 @@ const toggleModal = () => {
     <Teleport to="body">
       <Modal
         @close="toggleModal"
-        background-color="#212529b0"
+        background-color="#212529c7"
         :show="isModalShown"
         :title="rawFileBackUp?.name ?? 'Backup settings'"
       >
@@ -117,11 +118,14 @@ const toggleModal = () => {
       />
     </TransitionGroup>
 
-    <Text tag="p">
-      {{ todoStore.todoItemsCount }}
-      -
-      {{ todoStore.todoItemsCount === 1 ? "Note" : "Notes" }}
-    </Text>
+      <Badge class="btn-outline-success" tag="div">
+        <template #title>
+          {{ todoStore.todoItemsCount }}
+        </template>
+        <template #count>
+          {{ todoStore.todoItemsCount === 1 ? "Note" : "Notes" }}
+        </template>
+      </Badge>
   </template>
 
   <Text class="alert alert-warning" tag="div" v-else>No any notes</Text>

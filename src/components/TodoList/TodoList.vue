@@ -19,7 +19,7 @@ const {
   statuses,
 } = useTodoList();
 
-const { backup, uploadBackup, restoreData, rawFileBackUp } = useBackup();
+const { backup, uploadBackup, triggerUploadChange, restoreData, rawFileBackUp } = useBackup();
 
 const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADING);
 const isModalShown = ref<boolean>(false);
@@ -92,7 +92,7 @@ const toggleModal = () => {
               Save
             </button>
             <input
-              @change="uploadBackup"
+              @change="() => triggerUploadChange($refs?.inputRef?.files![0])"
               ref="inputRef"
               hidden
               class="form-control"

@@ -39,8 +39,11 @@ export const useBackup = () => {
 
     const triggerUploadChange = (file: File) => {
             
-        console.log(file)
-        rawFileBackUp.value = file
+        if(file){
+            console.log(file)
+
+            rawFileBackUp.value = file
+        }
             
     }
 
@@ -66,11 +69,7 @@ export const useBackup = () => {
         if(inputRef.value){
             inputRef.value.click()
 
-            const file = inputRef.value?.files?.[0]
-
-            if(file){
-                triggerUploadChange(file)
-            }
+            
             
         }
     }

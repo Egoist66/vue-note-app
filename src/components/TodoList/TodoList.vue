@@ -23,9 +23,6 @@ const { backup, uploadBackup, restoreData, rawFileBackUp } = useBackup();
 const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADING);
 const isModalShown = ref<boolean>(false);
 
-
-
-
 const toggleModal = () => {
   isModalShown.value = !isModalShown.value;
 };
@@ -51,13 +48,19 @@ const toggleModal = () => {
         {{ isLoading ? "Adding..." : "Add note" }}
       </button>
 
-      <button :disabled="statuses === TodoListCreateStatuses.DELETING || todoStore.todoItemsCount <= 0" @click="clearAllTodoItems" class="btn btn-outline-danger">
+      <button
+        :disabled="
+          statuses === TodoListCreateStatuses.DELETING || todoStore.todoItemsCount <= 0
+        "
+        @click="clearAllTodoItems"
+        class="btn btn-outline-danger"
+      >
         {{
           statuses === TodoListCreateStatuses.DELETING ? "Clearing..." : "Clear all notes"
         }}
       </button>
 
-      <button  @click="toggleModal" class="btn btn-outline-success">Backup notes</button>
+      <button @click="toggleModal" class="btn btn-outline-success">Backup notes</button>
     </div>
 
     <Teleport to="body">
@@ -68,13 +71,23 @@ const toggleModal = () => {
         :title="rawFileBackUp?.name ?? 'Backup settings'"
       >
         <div class="backup-controls">
-          <button :disabled="!todoStore.todoItemsCount" @click="backup" class="btn btn-outline-dark mb-3">Backup now</button>
+          <button
+            :disabled="!todoStore.todoItemsCount"
+            @click="backup"
+            class="btn btn-primary mb-3"
+          >
+            Backup now
+          </button>
           <div class="upload-controls">
-            <button @click="uploadBackup" class="btn btn-outline-dark mb-3">
+            <button @click="uploadBackup" class="btn btn-outline-primary mb-3">
               Upload
             </button>
 
-            <button :disabled="!rawFileBackUp" @click="restoreData"  class="btn btn-outline-dark">
+            <button
+              :disabled="!rawFileBackUp"
+              @click="restoreData"
+              class="btn btn-outline-primary mb-3"
+            >
               Save
             </button>
             <input
@@ -85,7 +98,6 @@ const toggleModal = () => {
               accept="application/json"
               type="file"
             />
-
           </div>
         </div>
       </Modal>
@@ -112,7 +124,7 @@ const toggleModal = () => {
     </Text>
   </template>
 
-  <p v-else>No items</p>
+  <Text class="alert alert-warning" tag="div" v-else>No any notes</Text>
 </template>
 
 <style scoped lang="scss">
@@ -121,7 +133,7 @@ input {
 }
 .input-controls {
   display: flex;
-  gap: 10px;
+  gap: 20px;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
@@ -144,7 +156,6 @@ input {
 
   & .upload-controls {
     width: 100%;
-    
   }
 }
 </style>

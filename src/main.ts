@@ -7,7 +7,6 @@ import router from './router'
 import { TodoStorePersister } from './plugins/todostore-persister'
 import { AppNotification } from './plugins/app-notification'
 
-
 const app = createApp(App)
 
 app.use(createPinia())

@@ -1,1 +1,1 @@
-*{margin:0;padding:0;box-sizing:border-box}body,html{background-color:#f8f8ff}.list-enter-active,.list-leave-active{transition:all .5s ease}.list-enter-from,.list-leave-to{opacity:0;transform:translateX(30px)}
+*{margin:0;padding:0;box-sizing:border-box}.list-enter-active,.list-leave-active{transition:all .5s ease}.list-enter-from,.list-leave-to{opacity:0;transform:translateX(30px)}

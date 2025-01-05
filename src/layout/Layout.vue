@@ -4,7 +4,14 @@
 </script>
 
 <template>
-    <main v-once class="main">
+
+    <header class="py-3" v-if="$slots.header">
+        <div class="container">
+            <slot name="header"/>
+        </div>
+    </header>
+    
+    <main class="main">
 
         <div class="container">
             

@@ -34,7 +34,7 @@ export const useTodoListItem = (todoItem: ToDoListItem) => {
   // })
 
 
-const rowsNum = ref<number>(getSync<number>('rows') ?? 1);
+const rowsNum = ref<number>(getSync<number>('rows') ?? 2);
 
 const increaseRows = async (e: MouseEvent) => {
   rowsNum.value++
@@ -44,7 +44,7 @@ const increaseRows = async (e: MouseEvent) => {
 }
 
 const resetRows = async () => {
-  rowsNum.value = 1
+  rowsNum.value = 2
 
   await nextTick()
   remove('rows')

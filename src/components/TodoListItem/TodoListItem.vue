@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import type { ToDoListItem } from "@/types/todolist-types";
 import { useTodoListItem } from "@/composables/useTodoListItem";
-import { computed, nextTick, ref } from "vue";
+import { computed} from "vue";
 import TodoListItemControls from "./TodoListItemControls.vue";
-import { useLS } from "@/composables/service/useLS";
 
 const props = defineProps<{
   todoItem: ToDoListItem;
@@ -17,25 +16,10 @@ defineEmits<{
 
 
 const isDeleting = computed<boolean>(() => props.todoItem.deleting);
-const { todoItemText, isReadMode, toggleEditMode } = useTodoListItem(props.todoItem);
+const { todoItemText, isReadMode, resetRows, rowsNum, increaseRows, toggleEditMode } = useTodoListItem(props.todoItem);
 
 
-const {set, remove, getSync} = useLS()
-const rowsNum = ref<number>(getSync<number>('rows') ?? 1);
 
-const increaseRows = async (e: MouseEvent) => {
-  rowsNum.value++
-
-  await nextTick()
-  set('rows', rowsNum.value)
-}
-
-const resetRows = async () => {
-  rowsNum.value = 1
-
-  await nextTick()
-  remove('rows')
-}
 
 
 defineExpose<{

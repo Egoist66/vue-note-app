@@ -1,6 +1,7 @@
 import type { ToDoListItem } from "@/types/todolist-types";
 import { delay } from "@/utils/delay";
-import {ref, toRef, watch} from "vue";
+import {nextTick, ref, toRef, watch} from "vue";
+import { useLS } from "./service/useLS";
 
 
 /**
@@ -14,9 +15,12 @@ export const useTodoListItem = (todoItem: ToDoListItem) => {
   const todoItemText = ref<string>(todoItem.text);
   const isReadMode = ref<boolean>(true)
 
+  const {set, remove, getSync} = useLS()
+
+
   const toggleEditMode = () => {
     if(!todoItemText.value.length) return
-    
+
     isReadMode.value = !isReadMode.value
   }
   const turnEditModeOff = () => isReadMode.value = false
@@ -29,10 +33,30 @@ export const useTodoListItem = (todoItem: ToDoListItem) => {
   //   }
   // })
 
+
+const rowsNum = ref<number>(getSync<number>('rows') ?? 1);
+
+const increaseRows = async (e: MouseEvent) => {
+  rowsNum.value++
+
+  await nextTick()
+  set('rows', rowsNum.value)
+}
+
+const resetRows = async () => {
+  rowsNum.value = 1
+
+  await nextTick()
+  remove('rows')
+}
+
   return {
     todoItemText,
     isReadMode: toRef(isReadMode),
     toggleEditMode,
-    turnEditModeOff
+    turnEditModeOff,
+    increaseRows,
+    rowsNum,
+    resetRows,
   }
 };

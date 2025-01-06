@@ -19,7 +19,8 @@ const editiButtonStatus = computed(() => props.isReadMode ? "Edit" : "Exit");
 <template>
   <div class="list-subgroup-item controls">
     <button
-      title="Mark as done"
+      :disabled="!isReadMode"
+      :title="'Mark as done'"
       :class="['btn', todoItem.completed ? 'btn-success' : 'btn-warning']"
       @click="toggleComplete"
       id="isDone"

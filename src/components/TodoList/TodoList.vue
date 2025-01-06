@@ -2,7 +2,7 @@
 import { useTodoList } from "@/composables/useTodoList";
 import { TodoListCreateStatuses } from "@/types/todolist-statuses";
 import TodoListItem from "../TodoListItem/TodoListItem.vue";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref, useTemplateRef } from "vue";
 import Text from "../reusable/Text.vue";
 import Modal from "../reusable/Modal.vue";
 import { useBackup } from "@/composables/service/useBackup";
@@ -21,12 +21,16 @@ const {
 
 const { backup, statuses: backupStatuses, uploadBackup, triggerUploadChange, restoreData, rawFileBackUp } = useBackup();
 
+const TodoListItemRef = useTemplateRef("TodoListItemRef");
 const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADING);
 const isModalShown = ref<boolean>(false);
 
 const toggleModal = () => {
   isModalShown.value = !isModalShown.value;
 };
+
+
+
 </script>
 
 <template>
@@ -61,7 +65,7 @@ const toggleModal = () => {
         }}
       </button>
 
-      <button @click="toggleModal" class="btn btn-outline-success">Backup notes</button>
+      <button @click="toggleModal" class="btn btn-outline-success">Settings</button>
     </div>
 
     <Teleport to="body">
@@ -69,7 +73,7 @@ const toggleModal = () => {
         @close="toggleModal"
         background-color="#212529c7"
         :show="isModalShown"
-        :title="rawFileBackUp?.name ?? 'Backup settings'"
+        :title="rawFileBackUp?.name ?? 'Settings'"
       >
         <div class="backup-controls">
           <button
@@ -99,6 +103,10 @@ const toggleModal = () => {
               accept="application/json"
               type="file"
             />
+
+            <div class="border-bottom mb-5"></div>
+
+            <button @click="TodoListItemRef![0]?.resetRows" class="btn btn-outline-danger">Make default note height</button>
           </div>
         </div>
       </Modal>
@@ -108,6 +116,7 @@ const toggleModal = () => {
   <template v-if="todoStore.todoItemsCount">
     <TransitionGroup tag="ul" class="list-group mb-5" name="list">
       <TodoListItem
+        ref="TodoListItemRef"
         @toggle-complete="completeTodoItem"
         @delete="deleteTodoItem"
         @edit="editTodoItem"

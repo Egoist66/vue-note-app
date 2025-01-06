@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { ToDoListItem } from "@/types/todolist-types";
 import { useTodoListItem } from "@/composables/useTodoListItem";
-import { computed } from "vue";
+import { computed, nextTick, ref } from "vue";
 import TodoListItemControls from "./TodoListItemControls.vue";
+import { useLS } from "@/composables/service/useLS";
 
 const props = defineProps<{
   todoItem: ToDoListItem;
@@ -14,10 +15,34 @@ defineEmits<{
   (e: "toggleComplete", id: ToDoListItem["id"]): void;
 }>();
 
+
 const isDeleting = computed<boolean>(() => props.todoItem.deleting);
 const { todoItemText, isReadMode, toggleEditMode } = useTodoListItem(props.todoItem);
 
 
+const {set, remove, getSync} = useLS()
+const rowsNum = ref<number>(getSync<number>('rows') ?? 1);
+
+const increaseRows = async (e: MouseEvent) => {
+  rowsNum.value++
+
+  await nextTick()
+  set('rows', rowsNum.value)
+}
+
+const resetRows = async () => {
+  rowsNum.value = 1
+
+  await nextTick()
+  remove('rows')
+}
+
+
+defineExpose<{
+  resetRows: () => Promise<void>
+}>({
+  resetRows
+})
 
 </script>
 
@@ -28,12 +53,15 @@ const { todoItemText, isReadMode, toggleEditMode } = useTodoListItem(props.todoI
   <li class="list-group-item shadow-sm" v-else>
     <textarea
       @dblclick="toggleEditMode"
-      :title="isReadMode ? ' Double click to edit' : ''"
+      :ref="(el: any) => todoItemText.length <= 0 && el.focus()"
+      @contextmenu.prevent="increaseRows"
+      :title="isReadMode ? ' Double click to edit / Right click to increase rows' : ''"
       :readonly="isReadMode"
+      :rows="rowsNum"
       :style="{ filter: todoItem.editing ? 'blur(1px)' : '' }"
       :class="{ 'resize-none': isReadMode, completed: todoItem.completed }"
       class="form-control w-50"
-      @blur="$emit('edit', todoItem.id, todoItemText, todoItem), (isReadMode = true)"
+      @blur="todoItemText.length <= 0 ? null : (isReadMode = true), $emit('edit', todoItem.id, todoItemText, todoItem)"
       v-model="todoItemText"
     ></textarea>
 
@@ -57,7 +85,6 @@ const { todoItemText, isReadMode, toggleEditMode } = useTodoListItem(props.todoI
   display: flex;
   column-gap: 10px;
   justify-content: space-between;
-  align-items: center;
 }
 
 .resize-none {
@@ -73,8 +100,8 @@ const { todoItemText, isReadMode, toggleEditMode } = useTodoListItem(props.todoI
 .list-subgroup-item {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
   align-items: center;
+  gap: 15px;
 }
 
 .completed {

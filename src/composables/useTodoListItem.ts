@@ -14,17 +14,20 @@ export const useTodoListItem = (todoItem: ToDoListItem) => {
   const todoItemText = ref<string>(todoItem.text);
   const isReadMode = ref<boolean>(true)
 
-  const toggleEditMode = () => isReadMode.value = !isReadMode.value
+  const toggleEditMode = () => {
+    if(!todoItemText.value.length) return
+    
+    isReadMode.value = !isReadMode.value
+  }
   const turnEditModeOff = () => isReadMode.value = false
 
 
-  watch(todoItemText, async () => {
-    if(todoItemText.value.length <= 0){
-      await delay(1500)
+  // watch(todoItemText, async () => {
+  //   if(todoItemText.value.length <= 0){
+  //     await delay(1500)
 
-      todoItemText.value = todoItem.text
-    }
-  })
+  //   }
+  // })
 
   return {
     todoItemText,

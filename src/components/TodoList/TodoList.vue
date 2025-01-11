@@ -2,7 +2,7 @@
 import { useTodoList } from "@/composables/useTodoList";
 import { TodoListCreateStatuses } from "@/types/todolist-statuses";
 import TodoListItem from "../TodoListItem/TodoListItem.vue";
-import { computed, onMounted, ref, useTemplateRef } from "vue";
+import { computed, ref, useTemplateRef } from "vue";
 import Text from "../reusable/Text.vue";
 import Modal from "../reusable/Modal.vue";
 import { useBackup } from "@/composables/service/useBackup";
@@ -30,11 +30,12 @@ const toggleModal = () => {
 };
 
 
-
 </script>
 
 <template>
   <div class="input-controls rounded mb-5">
+
+
     <input
       v-model.trim="inputValue"
       @keydown.enter="createTodoItem"

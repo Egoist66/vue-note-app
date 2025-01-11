@@ -1,6 +1,5 @@
 import type { ToDoListItem } from "@/types/todolist-types";
-import { delay } from "@/utils/delay";
-import {nextTick, ref, toRef, watch} from "vue";
+import {nextTick, ref, toRef} from "vue";
 import { useLS } from "./service/useLS";
 
 

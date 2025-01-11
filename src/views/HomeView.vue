@@ -6,7 +6,6 @@ import TodoList from "@/components/TodoList/TodoList.vue";
   <section class="todolist-section">
 
     <TodoList  />
-
   
   </section>
 </template>

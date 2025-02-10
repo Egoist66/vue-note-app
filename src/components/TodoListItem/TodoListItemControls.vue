@@ -28,7 +28,7 @@ const editiButtonStatus = computed(() => props.isReadMode ? "Edit" : "Exit");
       {{ todoItem.completed ? "Completed" : "Active" }}
     </button>
 
-    <button class="btn btn-primary" @click="toggleEditMode">
+    <button :disabled="todoItem.completed" class="btn btn-primary" @click="toggleEditMode">
       {{ todoItem.editing ? 'Editing...' : editiButtonStatus }}
     </button>
 

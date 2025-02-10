@@ -3,6 +3,7 @@ import type { ToDoListItem } from "@/types/todolist-types";
 import { useTodoListItem } from "@/composables/useTodoListItem";
 import { computed} from "vue";
 import TodoListItemControls from "./TodoListItemControls.vue";
+import { linkDetector } from "@/utils/link-detector";
 
 const props = defineProps<{
   todoItem: ToDoListItem;
@@ -36,7 +37,7 @@ defineExpose<{
    
   <li class="list-group-item shadow-sm" v-else>
     <textarea
-      @dblclick="toggleEditMode"
+      @dblclick="todoItem.completed ? () => {} : toggleEditMode"
       :ref="(el: any) => todoItemText.length <= 0 && el.focus()"
       @contextmenu.prevent="increaseRows"
       :title="isReadMode ? ' Double click to edit / Right click to increase rows' : ''"
@@ -45,7 +46,7 @@ defineExpose<{
       :style="{ filter: todoItem.editing ? 'blur(1px)' : '' }"
       :class="{ 'resize-none': isReadMode, completed: todoItem.completed }"
       class="form-control w-50"
-      @blur="todoItemText.length <= 0 ? null : (isReadMode = true), $emit('edit', todoItem.id, todoItemText, todoItem)"
+      @blur="todoItemText.length <= 0 ? null : (isReadMode = true), $emit('edit', todoItem.id, todoItemText, todoItem), linkDetector(todoItemText, (isLink) => console.log(isLink))"
       v-model="todoItemText"
     ></textarea>
 

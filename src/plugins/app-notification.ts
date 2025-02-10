@@ -17,10 +17,19 @@ export const AppNotification = async (): Promise<Plugin> => {
     
    
 
-    return {
-        install(app) {
+  return {
+/**
+ * Installs the notification functionality into the Vue app.
+ * 
+ * This method adds the `$notify` function to the global properties of the app,
+ * allowing components to create browser notifications using `createNotification`.
+ * 
+ * @param app - The Vue application instance.
+ */
 
-          app.config.globalProperties.$notify = notification.createNotification    
-        }
+    install(app) {
+
+      app.config.globalProperties.$notify = notification.createNotification    
     }
+  }
 }

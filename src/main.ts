@@ -1,25 +1,26 @@
-import './assets/main.scss'
+import "./assets/main.scss";
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import App from './App.vue'
-import router from './router'
-import { TodoStorePersister } from './plugins/todostore-persister'
-import { AppNotification } from './plugins/app-notification'
-import i18nPlugin  from './plugins/i18n'
-
-import langFile from './lang/lang.json'
-
-const app = createApp(App)
+import { createApp } from "vue";
+import { createPinia } from "pinia";
 
 
 
-app.use(createPinia())
-app.use(router)
-app.use(TodoStorePersister())
-app.use( async () => await AppNotification())
+//@ts-ignore
+import App from "./App.vue";
+import router from "./router";
+import { TodoStorePersister } from "./plugins/todostore-persister";
+import { AppNotification } from "./plugins/app-notification";
+import i18nPlugin from "./plugins/i18n";
 
-app.use(i18nPlugin, langFile)
+import langFile from "./lang/lang.json";
 
+const app = createApp(App);
 
-app.mount('#app')
+app.use(createPinia());
+app.use(router);
+app.use(TodoStorePersister());
+app.use(async () => await AppNotification());
+
+app.use(i18nPlugin, langFile);
+
+app.mount("#app");

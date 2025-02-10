@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { ToDoListItem } from "@/types/todolist-types";
 import { useTodoListItem } from "@/composables/useTodoListItem";
-import { computed} from "vue";
+import { computed } from "vue";
 import TodoListItemControls from "./TodoListItemControls.vue";
+
+import Tooltip from "../reusable/Tooltip.vue";
 import { linkDetector } from "@/utils/link-detector";
 
 const props = defineProps<{
@@ -11,33 +13,43 @@ const props = defineProps<{
 
 defineEmits<{
   (e: "delete", id: ToDoListItem["id"]): void;
-  (e: "edit", id: ToDoListItem["id"], text: ToDoListItem["text"], todoItem: ToDoListItem): void;
+  (
+    e: "edit",
+    id: ToDoListItem["id"],
+    text: ToDoListItem["text"],
+    todoItem: ToDoListItem
+  ): void;
   (e: "toggleComplete", id: ToDoListItem["id"]): void;
 }>();
 
-
 const isDeleting = computed<boolean>(() => props.todoItem.deleting);
-const { todoItemText, isReadMode, resetRows, rowsNum, increaseRows, toggleEditMode } = useTodoListItem(props.todoItem);
-
-
-
-
+const {
+  todoItemText,
+  showLinkOnMouseOver,
+  hideLinkOnMouseOut,
+  isReadMode,
+  isLinkViewEnabled,
+  resetRows,
+  rowsNum,
+  increaseRows,
+  toggleEditMode,
+} = useTodoListItem(props.todoItem);
 
 defineExpose<{
-  resetRows: () => Promise<void>
+  resetRows: () => Promise<void>;
 }>({
-  resetRows
-})
-
+  resetRows,
+});
 </script>
 
 <template>
   <slot v-if="$slots['todo-item']" name="todo-item" :todoItem="todoItem" />
 
-   
   <li class="list-group-item shadow-sm" v-else>
     <textarea
       @dblclick="todoItem.completed ? () => {} : toggleEditMode"
+      @mouseover="showLinkOnMouseOver(todoItemText)"
+      @mouseout="hideLinkOnMouseOut"
       :ref="(el: any) => todoItemText.length <= 0 && el.focus()"
       @contextmenu.prevent="increaseRows"
       :title="isReadMode ? ' Double click to edit / Right click to increase rows' : ''"
@@ -46,9 +58,17 @@ defineExpose<{
       :style="{ filter: todoItem.editing ? 'blur(1px)' : '' }"
       :class="{ 'resize-none': isReadMode, completed: todoItem.completed }"
       class="form-control w-50"
-      @blur="todoItemText.length <= 0 ? null : (isReadMode = true), $emit('edit', todoItem.id, todoItemText, todoItem), linkDetector(todoItemText, (isLink) => console.log(isLink))"
+      @blur="
+        todoItemText.length <= 0 ? null : (isReadMode = true),
+          $emit('edit', todoItem.id, todoItemText, todoItem)
+      "
       v-model="todoItemText"
     ></textarea>
+
+    <Tooltip :show="isLinkViewEnabled">
+      <a :style="{ color: 'blue' }" :href="todoItemText">{{ todoItemText }}</a>
+    </Tooltip>
+
 
     <TodoListItemControls
       :toggleComplete="() => $emit('toggleComplete', todoItem.id)"

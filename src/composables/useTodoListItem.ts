@@ -1,6 +1,7 @@
 import type { ToDoListItem } from "@/types/todolist-types";
 import {nextTick, ref, toRef} from "vue";
 import { useLS } from "./service/useLS";
+import { linkDetector } from "@/utils/link-detector";
 
 
 /**
@@ -13,6 +14,7 @@ export const useTodoListItem = (todoItem: ToDoListItem) => {
 
   const todoItemText = ref<string>(todoItem.text);
   const isReadMode = ref<boolean>(true)
+  const isLinkViewEnabled = ref<boolean>(false)
 
   const {set, remove, getSync} = useLS()
 
@@ -42,6 +44,19 @@ const increaseRows = async (e: MouseEvent) => {
   set('rows', rowsNum.value)
 }
 
+const showLinkOnMouseOver = (todoItemText: string) => {
+  linkDetector(todoItemText, (isLink) => {
+    if(isLink){
+      isLinkViewEnabled.value = true
+      console.log('isLink', isLink);
+    }
+  })
+}
+
+const hideLinkOnMouseOut = () => {
+  isLinkViewEnabled.value = false
+}
+
 const resetRows = async () => {
   rowsNum.value = 2
 
@@ -52,7 +67,10 @@ const resetRows = async () => {
   return {
     todoItemText,
     isReadMode: toRef(isReadMode),
+    isLinkViewEnabled,
     toggleEditMode,
+    hideLinkOnMouseOut,
+    showLinkOnMouseOver,
     turnEditModeOff,
     increaseRows,
     rowsNum,

@@ -52,12 +52,19 @@ export const useTodoListItem = (todoItem: ToDoListItem) => {
     if (e.target.classList.contains("link-tooltip")) {
       return;
     }
-    else if (e.target.classList.contains("input-area")) {
+    if (e.target.classList.contains("input-area")) {
       return;
     }
-    else {
-      isLinkViewEnabled.value = false;
+    if(e.target.tagName === 'BUTTON'){
+      return
     }
+    if(e.target.classList.contains('controls')){
+      return
+    }
+
+    
+    isLinkViewEnabled.value = false;
+    
   };
 
   onMounted(() => {

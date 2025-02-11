@@ -1,5 +1,8 @@
 <script setup lang="ts">
 
+
+const {isStatic = false} = defineProps<{isStatic?: boolean}>()
+
 </script>
 
 <template>
@@ -12,7 +15,7 @@
 
 
 .link-tooltip {
-  position: absolute;
+  position: v-bind("isStatic ? 'static' : 'absolute'");
   top: -50px;
   right: 311px;
   background: ghostwhite;

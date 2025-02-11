@@ -68,7 +68,7 @@ defineExpose<{
     ></textarea>
 
     <Transition name="bounce" mode="out-in">
-      <Tooltip @contextmenu.prevent="isLinkViewEnabled = false" v-show="isLinkViewEnabled">
+      <Tooltip :is-static="!isReadMode" @contextmenu.prevent="isLinkViewEnabled = false" v-show="isLinkViewEnabled">
         <a
           rel="noopener noreferrer"
           class="no-underline text-info"

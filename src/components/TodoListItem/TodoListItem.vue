@@ -46,7 +46,6 @@ defineExpose<{
   <slot v-if="$slots['todo-item']" name="todo-item" :todoItem="todoItem" />
 
   <li
-    @mouseout="hideLinkOnMouseOut"
     class="list-group-item shadow-sm"
     v-else
   >
@@ -69,7 +68,7 @@ defineExpose<{
     ></textarea>
 
     <Transition name="bounce" mode="out-in">
-      <Tooltip v-show="isLinkViewEnabled">
+      <Tooltip @contextmenu.prevent="isLinkViewEnabled = false" v-show="isLinkViewEnabled">
         <a
           rel="noopener noreferrer"
           class="no-underline text-info"

@@ -1,5 +1,5 @@
 import type { ToDoListItem } from "@/types/todolist-types";
-import { nextTick, ref, toRef } from "vue";
+import { nextTick, onMounted, onUnmounted, ref, toRef } from "vue";
 import { useLS } from "./service/useLS";
 import { linkDetector } from "@/utils/link-detector";
 
@@ -48,14 +48,22 @@ export const useTodoListItem = (todoItem: ToDoListItem) => {
   };
 
   const hideLinkOnMouseOut = (e: any) => {
+    e.stopPropagation()
     if (e.target.classList.contains("link-tooltip")) {
       return;
-    } else if (e.target.classList.contains("input-area")) {
-      return;
-    } else {
+    }
+    else {
       isLinkViewEnabled.value = false;
     }
   };
+
+  onMounted(() => {
+    document.documentElement.addEventListener("click", hideLinkOnMouseOut);
+  })
+
+  onUnmounted(() => {
+    document.documentElement.removeEventListener("click", hideLinkOnMouseOut);
+  })
 
   const resetRows = async () => {
     rowsNum.value = 2;

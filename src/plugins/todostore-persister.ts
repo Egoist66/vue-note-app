@@ -13,6 +13,7 @@ export const TodoStorePersister = (): Plugin => {
 
     const {set} = useLS()
     const todoStore = useTodoListStore()
+
     return {
         install(app) {
             todoStore.$subscribe(async () => {

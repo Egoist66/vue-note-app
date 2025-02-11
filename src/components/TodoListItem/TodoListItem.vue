@@ -5,7 +5,6 @@ import { computed } from "vue";
 import TodoListItemControls from "./TodoListItemControls.vue";
 
 import Tooltip from "../reusable/Tooltip.vue";
-import { linkDetector } from "@/utils/link-detector";
 import { clearLink } from '../../utils/clear-links';
 
 const props = defineProps<{

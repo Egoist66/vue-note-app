@@ -37,9 +37,6 @@ const resetRows = () => {
 }
 
 
-onMounted(() => {
-  console.log(TodoListItemRef);
-})
 
 </script>
 

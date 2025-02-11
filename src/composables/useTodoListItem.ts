@@ -1,31 +1,26 @@
 import type { ToDoListItem } from "@/types/todolist-types";
-import {nextTick, onMounted, onUnmounted, ref, toRef} from "vue";
+import { nextTick, ref, toRef } from "vue";
 import { useLS } from "./service/useLS";
 import { linkDetector } from "@/utils/link-detector";
 
-
 /**
-   * Composition function that returns refs and functions to control a todolist item.
-   *
-*/
+ * Composition function that returns refs and functions to control a todolist item.
+ *
+ */
 
 export const useTodoListItem = (todoItem: ToDoListItem) => {
- 
-
   const todoItemText = ref<string>(todoItem.text);
-  const isReadMode = ref<boolean>(true)
-  const isLinkViewEnabled = ref<boolean>(false)
+  const isReadMode = ref<boolean>(true);
+  const isLinkViewEnabled = ref<boolean>(false);
 
-  const {set, remove, getSync} = useLS()
-
+  const { set, remove, getSync } = useLS();
 
   const toggleEditMode = () => {
-    if(!todoItemText.value.length) return
+    if (!todoItemText.value.length) return;
 
-    isReadMode.value = !isReadMode.value
-  }
-  const turnEditModeOff = () => isReadMode.value = false
-
+    isReadMode.value = !isReadMode.value;
+  };
+  const turnEditModeOff = () => (isReadMode.value = false);
 
   // watch(todoItemText, async () => {
   //   if(todoItemText.value.length <= 0){
@@ -34,54 +29,40 @@ export const useTodoListItem = (todoItem: ToDoListItem) => {
   //   }
   // })
 
+  const rowsNum = ref<number>(getSync<number>("rows") ?? 2);
 
-const rowsNum = ref<number>(getSync<number>('rows') ?? 2);
+  const increaseRows = async (e: MouseEvent) => {
+    rowsNum.value++;
 
-const increaseRows = async (e: MouseEvent) => {
-  rowsNum.value++
+    await nextTick();
+    set("rows", rowsNum.value);
+  };
 
-  await nextTick()
-  set('rows', rowsNum.value)
-}
+  const showLinkOnMouseOver = (todoItemText: string) => {
+    linkDetector(todoItemText, (isLink) => {
+      if (isLink) {
+        isLinkViewEnabled.value = true;
+        console.log("isLink", isLink);
+      }
+    });
+  };
 
-const showLinkOnMouseOver = (todoItemText: string) => {
-  linkDetector(todoItemText, (isLink) => {
-    if(isLink){
-      isLinkViewEnabled.value = true
-      console.log('isLink', isLink);
+  const hideLinkOnMouseOut = (e: any) => {
+    if (e.target.classList.contains("link-tooltip")) {
+      return;
+    } else if (e.target.classList.contains("input-area")) {
+      return;
+    } else {
+      isLinkViewEnabled.value = false;
     }
-  })
-}
+  };
 
-const hideLinkOnMouseOut = (e: any) => {
-  if(e.target.classList.contains('link-tooltip')){
-    return
-  }
-  else if(e.target.classList.contains('input-area')) {
-    return
-  }
-  else {
-    isLinkViewEnabled.value = false
+  const resetRows = async () => {
+    rowsNum.value = 2;
 
-  }
-}
-
-const resetRows = async () => {
-  rowsNum.value = 2
-
-  await nextTick()
-  remove('rows')
-}
-
-
-
-onMounted(() => {
-  document.documentElement.addEventListener('click', hideLinkOnMouseOut)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('click', hideLinkOnMouseOut)
-})
+    await nextTick();
+    remove("rows");
+  };
 
   return {
     todoItemText,
@@ -94,5 +75,5 @@ onUnmounted(() => {
     increaseRows,
     rowsNum,
     resetRows,
-  }
+  };
 };

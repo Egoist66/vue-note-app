@@ -5,7 +5,7 @@ import { computed } from "vue";
 import TodoListItemControls from "./TodoListItemControls.vue";
 
 import Tooltip from "../reusable/Tooltip.vue";
-import { clearLink } from '../../utils/clear-links';
+import { clearLink } from "../../utils/clear-links";
 
 const props = defineProps<{
   todoItem: ToDoListItem;
@@ -45,7 +45,11 @@ defineExpose<{
 <template>
   <slot v-if="$slots['todo-item']" name="todo-item" :todoItem="todoItem" />
 
-  <li class="list-group-item shadow-sm" v-else>
+  <li
+    @mouseout="hideLinkOnMouseOut"
+    class="list-group-item shadow-sm"
+    v-else
+  >
     <textarea
       @dblclick="todoItem.completed && toggleEditMode"
       @mouseover="showLinkOnMouseOver(todoItemText)"
@@ -70,7 +74,7 @@ defineExpose<{
           rel="noopener noreferrer"
           class="no-underline text-info"
           target="_blank"
-          :style="{textDecoration: 'none' }"
+          :style="{ textDecoration: 'none' }"
           :href="clearLink(todoItemText)"
           >Go to - <i class="fw-bold">{{ clearLink(todoItemText) }}</i></a
         >
@@ -123,7 +127,7 @@ defineExpose<{
 }
 
 i {
-  text-decoration: underline 1px solid ;
+  text-decoration: underline 1px solid;
 }
 
 textarea {

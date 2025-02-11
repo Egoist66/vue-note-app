@@ -51,7 +51,7 @@ defineExpose<{
       @mouseover="showLinkOnMouseOver(todoItemText)"
       :ref="(el: any) => todoItemText.length <= 0 && el.focus()"
       @contextmenu.prevent="increaseRows"
-      :title="isReadMode ? ' Double click to edit / Right click to increase rows' : ''"
+      :title="isReadMode ? 'Right click to increase rows' : ''"
       :readonly="isReadMode"
       :rows="rowsNum"
       :style="{ filter: todoItem.editing ? 'blur(1px)' : '' }"

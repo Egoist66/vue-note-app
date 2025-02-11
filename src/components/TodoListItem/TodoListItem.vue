@@ -6,6 +6,7 @@ import TodoListItemControls from "./TodoListItemControls.vue";
 
 import Tooltip from "../reusable/Tooltip.vue";
 import { linkDetector } from "@/utils/link-detector";
+import { clearLink } from '../../utils/clear-links';
 
 const props = defineProps<{
   todoItem: ToDoListItem;
@@ -47,9 +48,8 @@ defineExpose<{
 
   <li class="list-group-item shadow-sm" v-else>
     <textarea
-      @dblclick="todoItem.completed ? () => {} : toggleEditMode"
+      @dblclick="todoItem.completed && toggleEditMode"
       @mouseover="showLinkOnMouseOver(todoItemText)"
-      @mouseout="hideLinkOnMouseOut"
       :ref="(el: any) => todoItemText.length <= 0 && el.focus()"
       @contextmenu.prevent="increaseRows"
       :title="isReadMode ? ' Double click to edit / Right click to increase rows' : ''"
@@ -57,7 +57,7 @@ defineExpose<{
       :rows="rowsNum"
       :style="{ filter: todoItem.editing ? 'blur(1px)' : '' }"
       :class="{ 'resize-none': isReadMode, completed: todoItem.completed }"
-      class="form-control w-50"
+      class="form-control w-50 input-area"
       @blur="
         todoItemText.length <= 0 ? null : (isReadMode = true),
           $emit('edit', todoItem.id, todoItemText, todoItem)
@@ -65,10 +65,18 @@ defineExpose<{
       v-model="todoItemText"
     ></textarea>
 
-    <Tooltip :show="isLinkViewEnabled">
-      <a :style="{ color: 'blue' }" :href="todoItemText">{{ todoItemText }}</a>
-    </Tooltip>
-
+    <Transition name="bounce" mode="out-in">
+      <Tooltip v-show="isLinkViewEnabled">
+        <a
+          rel="noopener noreferrer"
+          class="no-underline text-info"
+          target="_blank"
+          :style="{textDecoration: 'none' }"
+          :href="clearLink(todoItemText)"
+          >Go to - <i class="fw-bold">{{ clearLink(todoItemText) }}</i></a
+        >
+      </Tooltip>
+    </Transition>
 
     <TodoListItemControls
       :toggleComplete="() => $emit('toggleComplete', todoItem.id)"
@@ -113,6 +121,10 @@ defineExpose<{
   text-decoration: line-through;
   filter: opacity(0.5);
   transition: all 0.3s ease;
+}
+
+i {
+  text-decoration: underline 1px solid ;
 }
 
 textarea {

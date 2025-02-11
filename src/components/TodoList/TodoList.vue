@@ -2,7 +2,7 @@
 import { useTodoList } from "@/composables/useTodoList";
 import { TodoListCreateStatuses } from "@/types/todolist-statuses";
 import TodoListItem from "../TodoListItem/TodoListItem.vue";
-import { computed, ref, useTemplateRef } from "vue";
+import { computed, ref, useTemplateRef, onMounted } from 'vue';
 import Text from "../reusable/Text.vue";
 import Modal from "../reusable/Modal.vue";
 import { useBackup } from "@/composables/service/useBackup";
@@ -21,7 +21,7 @@ const {
 
 const { backup, statuses: backupStatuses, uploadBackup, triggerUploadChange, restoreData, rawFileBackUp } = useBackup();
 
-const TodoListItemRef = useTemplateRef("TodoListItemRef");
+const TodoListItemRef = useTemplateRef<any[]>("TodoListItemRef");
 const isLoading = computed(() => statuses.value === TodoListCreateStatuses.LOADING);
 const isModalShown = ref<boolean>(false);
 
@@ -29,6 +29,17 @@ const toggleModal = () => {
   isModalShown.value = !isModalShown.value;
 };
 
+const resetRows = () => {
+  TodoListItemRef.value?.forEach((el:any) => {
+    el.resetRows()
+  })
+
+}
+
+
+onMounted(() => {
+  console.log(TodoListItemRef);
+})
 
 </script>
 
@@ -105,7 +116,7 @@ const toggleModal = () => {
 
             <div class="border-bottom mb-5"></div>
 
-            <button @click="TodoListItemRef![0]?.resetRows" class="btn btn-outline-danger">Make default note height</button>
+            <button @click="resetRows" class="btn btn-outline-danger">Make default note height</button>
           </div>
         </div>
       </Modal>

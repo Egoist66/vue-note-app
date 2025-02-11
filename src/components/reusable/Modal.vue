@@ -1,13 +1,13 @@
 <script setup lang="ts">
 
 defineProps<{
-    show?: boolean
-    title?: string
-    backgroundColor?: string
+  show?: boolean
+  title?: string
+  backgroundColor?: string
 }>()
 
 defineEmits<{
-    (e: 'close'): void
+  (e: 'close'): void
 }>()
 
 </script>

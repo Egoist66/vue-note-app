@@ -1,7 +1,7 @@
 import { onBeforeMount, onMounted, ref, watch } from "vue"
 import { useLS } from "./useLS"
 
-type AppTheme = 'light' | 'dark'
+export type AppTheme = 'light' | 'dark'
 
 
 /**

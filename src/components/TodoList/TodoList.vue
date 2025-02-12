@@ -7,6 +7,7 @@ import Text from "../reusable/Text.vue";
 import Modal from "../reusable/Modal.vue";
 import { useBackup } from "@/composables/service/useBackup";
 import Badge from "../reusable/Badge.vue";
+import { useTheme } from '../../composables/service/useTheme';
 
 const {
   inputValue,

@@ -6,6 +6,7 @@ import TodoListItemControls from "./TodoListItemControls.vue";
 
 import Tooltip from "../reusable/Tooltip.vue";
 import { clearLink } from "../../utils/clear-links";
+import { inject } from "vue";
 
 const props = defineProps<{
   todoItem: ToDoListItem;
@@ -40,15 +41,14 @@ defineExpose<{
 }>({
   resetRows,
 });
+
+const theme = inject("theme");
 </script>
 
 <template>
   <slot v-if="$slots['todo-item']" name="todo-item" :todoItem="todoItem" />
 
-  <li
-    class="list-group-item shadow-sm"
-    v-else
-  >
+  <li class="list-group-item shadow-sm" v-else>
     <textarea
       @dblclick="todoItem.completed && toggleEditMode"
       @mouseover="showLinkOnMouseOver(todoItemText)"
@@ -68,7 +68,15 @@ defineExpose<{
     ></textarea>
 
     <Transition name="bounce" mode="out-in">
-      <Tooltip :is-static="!isReadMode" @contextmenu.prevent="isLinkViewEnabled = false" v-show="isLinkViewEnabled">
+      <Tooltip
+        :style="{
+          backgroundColor: theme === 'light' ? 'white' : '#212529',
+          border: theme === 'light' ? '' : '1px solid #495057',
+        }"
+        :is-static="!isReadMode"
+        @contextmenu.prevent="isLinkViewEnabled = false"
+        v-show="isLinkViewEnabled"
+      >
         <a
           rel="noopener noreferrer"
           class="no-underline text-primary"
@@ -97,7 +105,6 @@ defineExpose<{
   word-break: break-all;
 }
 
- 
 .list-group-item {
   display: flex;
   column-gap: 10px;

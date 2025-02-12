@@ -2,11 +2,11 @@
 import { RouterView } from "vue-router";
 import Layout from "./layout/Layout.vue";
 import { useTheme } from "./composables/service/useTheme";
+import { provide } from "vue";
 
 
 const {theme, toggleTheme} = useTheme()
-
-
+provide('theme', theme)
 </script>
 
 <template>

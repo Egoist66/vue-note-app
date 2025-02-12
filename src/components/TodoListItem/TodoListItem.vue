@@ -71,7 +71,7 @@ defineExpose<{
       <Tooltip :is-static="!isReadMode" @contextmenu.prevent="isLinkViewEnabled = false" v-show="isLinkViewEnabled">
         <a
           rel="noopener noreferrer"
-          class="no-underline text-info"
+          class="no-underline text-primary"
           target="_blank"
           :style="{ textDecoration: 'none' }"
           :href="clearLink(todoItemText)"
@@ -96,9 +96,13 @@ defineExpose<{
   font-size: 12px;
   word-break: break-all;
 }
+
+ 
 .list-group-item {
   display: flex;
   column-gap: 10px;
+  transition: all 0.3s ease;
+
   justify-content: space-between;
 }
 

@@ -2,6 +2,7 @@ import type { ToDoListItem } from "@/types/todolist-types";
 import { nextTick, onMounted, onUnmounted, ref, toRef } from "vue";
 import { useLS } from "./service/useLS";
 import { linkDetector } from "@/utils/link-detector";
+import { delay } from "@/utils/delay";
 
 /**
  * Composition function that returns refs and functions to control a todolist item.
@@ -39,15 +40,16 @@ export const useTodoListItem = (todoItem: ToDoListItem) => {
   };
 
   const showLinkOnMouseOver = (todoItemText: string) => {
-    linkDetector(todoItemText, (isLink) => {
+    linkDetector(todoItemText, async (isLink) => {
       if (isLink) {
+
         isLinkViewEnabled.value = true;
         console.log("isLink", isLink);
       }
     });
   };
 
-  const hideLinkOnMouseOut = (e: any) => {
+  const hideLinkOnMouseOut = (e?: any) => {
     e.stopPropagation()
     if (e.target.classList.contains("link-tooltip")) {
       return;

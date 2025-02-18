@@ -7,6 +7,7 @@ import { provide } from "vue";
 
 const {theme, toggleTheme} = useTheme()
 provide('theme', theme)
+
 </script>
 
 <template>

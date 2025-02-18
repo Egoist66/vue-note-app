@@ -77,7 +77,7 @@ export const useBackup = () => {
                     await delay(1000)
                     setSuccess()
                     fileBackup.value = data
-                    todoItems.value = data
+                    todoItems.value = fileBackup.value
 
                     fileBackup.value = null
                     rawFileBackUp.value = null
